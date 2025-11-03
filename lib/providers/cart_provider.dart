@@ -3,14 +3,10 @@ import '../models/shoe_model.dart';
 
 class CartItem {
   final ShoeModel shoe;
-  final String selectedColor;
-  final String selectedSize;
-  int quantity;
+  int quantity; // Koli adedi
 
   CartItem({
     required this.shoe,
-    required this.selectedColor,
-    required this.selectedSize,
     this.quantity = 1,
   });
 }
@@ -22,13 +18,10 @@ class CartProvider with ChangeNotifier {
 
   int get itemCount => _items.fold(0, (sum, item) => sum + item.quantity);
 
-  void addToCart(ShoeModel shoe, String color, String size) {
+  void addToCart(ShoeModel shoe) {
     // Check if item already exists
     final existingIndex = _items.indexWhere(
-      (item) =>
-          item.shoe.id == shoe.id &&
-          item.selectedColor == color &&
-          item.selectedSize == size,
+      (item) => item.shoe.id == shoe.id,
     );
 
     if (existingIndex >= 0) {
@@ -36,8 +29,6 @@ class CartProvider with ChangeNotifier {
     } else {
       _items.add(CartItem(
         shoe: shoe,
-        selectedColor: color,
-        selectedSize: size,
       ));
     }
     notifyListeners();

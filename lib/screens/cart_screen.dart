@@ -176,7 +176,7 @@ class CartScreen extends StatelessWidget {
                 ),
               ),
               child: Image.asset(
-                item.shoe.getImagePathForColor(item.selectedColor),
+                item.shoe.imagePath,
                 fit: BoxFit.cover,
                 errorBuilder: (_, __, ___) => Icon(
                   Icons.image_outlined,
@@ -211,9 +211,9 @@ class CartScreen extends StatelessWidget {
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    _buildTag(context, theme, item.selectedColor),
+                    _buildTag(context, theme, item.shoe.color),
                     const SizedBox(width: 8),
-                    _buildTag(context, theme, 'No: ${item.selectedSize}'),
+                    _buildTag(context, theme, 'Numara: ${item.shoe.sizeRange}'),
                   ],
                 ),
               ],
@@ -320,13 +320,13 @@ class CartScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Toplam Ürün',
+                  'Toplam Koli',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: theme.textSecondaryColor,
                   ),
                 ),
                 Text(
-                  '${cart.itemCount} Adet',
+                  '${cart.itemCount} Koli',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.w800,
                   ),
@@ -430,20 +430,20 @@ class CartScreen extends StatelessWidget {
   Future<void> _shareViaWhatsApp(BuildContext context, CartProvider cart) async {
     if (cart.items.isEmpty) return;
 
-    // Sepet detaylarını oluştur
-    String message = '🛍 *SEPETİM*\n\n';
+    // Sepet detaylarını oluştur - Toptan satış formatı
+    String message = '📦 *TOPTAN SİPARİŞ*\n\n';
     
     for (int i = 0; i < cart.items.length; i++) {
       final item = cart.items[i];
       message += '${i + 1}. *${item.shoe.name}*\n';
       message += '   • Marka: ${item.shoe.brand}\n';
-      message += '   • Renk: ${item.selectedColor}\n';
-      message += '   • Numara: ${item.selectedSize}\n';
-      message += '   • Adet: ${item.quantity}\n\n';
+      message += '   • Renk: ${item.shoe.color}\n';
+      message += '   • Numara Aralığı: ${item.shoe.sizeRange}\n';
+      message += '   • Koli Adedi: ${item.quantity}\n\n';
     }
     
     message += '━━━━━━━━━━━━━━━━\n';
-    message += '📦 *Toplam: ${cart.itemCount} Ürün*\n\n';
+    message += '📦 *Toplam: ${cart.itemCount} Koli*\n\n';
     message += '_Ayakkabı Kataloğu ile oluşturuldu_';
 
     try {
@@ -453,7 +453,7 @@ class CartScreen extends StatelessWidget {
       for (var item in cart.items) {
         try {
           // Asset'ten görseli yükle
-          final imagePath = item.shoe.getImagePathForColor(item.selectedColor);
+          final imagePath = item.shoe.imagePath;
           final byteData = await rootBundle.load(imagePath);
           final bytes = byteData.buffer.asUint8List();
           

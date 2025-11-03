@@ -7,7 +7,6 @@ import '../models/shoe_model.dart';
 import '../services/data_service.dart';
 import 'gender_selection_screen.dart';
 import 'cart_screen.dart';
-import 'shoe_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -170,33 +169,29 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
 
-            // Yeni Ürünler Carousel
+            // Promosyon Carousel
             SliverToBoxAdapter(
-              child: _buildNewProductsCarousel(context, theme),
+              child: _buildPromotionCarousel(context, theme),
             ),
 
-            // Cinsiyet Seçimi Section
+            // Kategoriler Başlığı
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Cinsiyet Seçimi',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.w900,
-                        color: theme.textColor,
-                      ),
-                    ),
-                  ],
+                padding: const EdgeInsets.fromLTRB(20, 24, 20, 16),
+                child: Text(
+                  'Kategoriler',
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w900,
+                    color: theme.textColor,
+                    fontSize: 22,
+                  ),
                 ),
               ),
             ),
 
             // Gender Categories Grid
             SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
               sliver: SliverGrid(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
@@ -208,14 +203,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   _buildGenderCard(
                     context,
                     theme,
-                    'Kadın',
-                    'kadin',
-                    Icons.woman,
-                    const [Color(0xFFFF6B9D), Color(0xFFFFC371)],
-                  ),
-                  _buildGenderCard(
-                    context,
-                    theme,
                     'Erkek',
                     'erkek',
                     Icons.man,
@@ -224,37 +211,58 @@ class _HomeScreenState extends State<HomeScreen> {
                   _buildGenderCard(
                     context,
                     theme,
-                    'Çocuk',
+                    'Kadın',
+                    'kadin',
+                    Icons.woman,
+                    const [Color(0xFFFF6B9D), Color(0xFFFFC371)],
+                  ),
+                  _buildGenderCard(
+                    context,
+                    theme,
+                    'Garson',
+                    'garson',
+                    Icons.restaurant,
+                    const [Color(0xFF00B4DB), Color(0xFF0083B0)],
+                  ),
+                  _buildGenderCard(
+                    context,
+                    theme,
+                    'Filet',
+                    'cocuk',
+                    Icons.child_friendly,
+                    const [Color(0xFF11D0D5), Color(0xFF7B2CBF)],
+                  ),
+                  _buildGenderCard(
+                    context,
+                    theme,
+                    'Patik',
                     'cocuk',
                     Icons.child_care,
-                    const [Color(0xFF11D0D5), Color(0xFF7B2CBF)],
+                    const [Color(0xFFFF0080), Color(0xFFFF8C00)],
+                  ),
+                  _buildGenderCard(
+                    context,
+                    theme,
+                    'Bebe',
+                    'cocuk',
+                    Icons.baby_changing_station,
+                    const [Color(0xFFFFBE0B), Color(0xFFFFD60A)],
                   ),
                 ]),
               ),
             ),
 
-            // Özellikler Section
+            // Özellikler Başlığı
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 32, 20, 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Özel Koleksiyonlar',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.w900,
-                        color: theme.textColor,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'İndirimler ve özel ürünler',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: theme.textSecondaryColor,
-                      ),
-                    ),
-                  ],
+                padding: const EdgeInsets.fromLTRB(20, 24, 20, 16),
+                child: Text(
+                  'Öne Çıkanlar',
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w900,
+                    color: theme.textColor,
+                    fontSize: 22,
+                  ),
                 ),
               ),
             ),
@@ -277,7 +285,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     'İndirimli Ürünler',
                     Icons.local_offer,
                     const [Color(0xFFFF0080), Color(0xFFFF8C00)],
-                    false,
                   ),
                   _buildFeatureCard(
                     context,
@@ -286,7 +293,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     'Çanta & Bakım',
                     Icons.shopping_bag_outlined,
                     const [Color(0xFF00B4DB), Color(0xFF0083B0)],
-                    false,
                   ),
                   _buildFeatureCard(
                     context,
@@ -295,7 +301,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     'Geniş Seçenek',
                     Icons.straighten,
                     const [Color(0xFF00F260), Color(0xFF0575E6)],
-                    false,
                   ),
                   _buildFeatureCard(
                     context,
@@ -304,7 +309,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     'Son Eklenenler',
                     Icons.new_releases_outlined,
                     const [Color(0xFFFFD200), Color(0xFFF7971E)],
-                    false,
                   ),
                 ]),
               ),
@@ -327,62 +331,60 @@ class _HomeScreenState extends State<HomeScreen> {
       onTap: () {
         Navigator.push(
           context,
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => GenderSelectionScreen(gender: gender),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-              const begin = Offset(1.0, 0.0);
-              const end = Offset.zero;
-              const curve = Curves.easeInOutCubic;
-              var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-              return SlideTransition(
-                position: animation.drive(tween),
-                child: child,
-              );
-            },
+          MaterialPageRoute(
+            builder: (_) => GenderSelectionScreen(
+              gender: gender,
+            ),
           ),
         );
       },
       child: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: colors,
+          color: theme.surfaceColor,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: colors.first.withValues(alpha: 0.3),
+            width: 2,
           ),
-          borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: colors.first.withValues(alpha: 0.3),
-              blurRadius: 20,
-              offset: const Offset(0, 8),
+              color: colors.first.withValues(alpha: 0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.3),
-                  shape: BoxShape.circle,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: colors,
                 ),
-                child: Icon(icon, color: Colors.white, size: 32),
+                shape: BoxShape.circle,
               ),
-              const SizedBox(height: 12),
-              Text(
+              child: Icon(icon, color: Colors.white, size: 32),
+            ),
+            const SizedBox(height: 12),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Text(
                 title,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w900,
-                  color: Colors.white,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: theme.textColor,
                 ),
                 textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -395,93 +397,65 @@ class _HomeScreenState extends State<HomeScreen> {
     String subtitle,
     IconData icon,
     List<Color> colors,
-    bool isActive,
   ) {
-    return GestureDetector(
-      onTap: () => _showComingSoon(context, theme),
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: colors,
-          ),
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: colors.first.withValues(alpha: 0.3),
-              blurRadius: 20,
-              offset: const Offset(0, 8),
-            ),
-          ],
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: colors,
         ),
-        child: Stack(
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: colors.first.withValues(alpha: 0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.3),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Icon(icon, color: Colors.white, size: 24),
-                  ),
-                  const Spacer(),
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    subtitle,
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: Colors.white.withValues(alpha: 0.9),
-                      fontWeight: FontWeight.w500,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(12),
               ),
+              child: Icon(icon, color: Colors.white, size: 24),
             ),
-            if (!isActive)
-              Positioned(
-                top: 8,
-                right: 8,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: const Text(
-                    'YAKINDA',
-                    style: TextStyle(
-                      fontSize: 8,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
+            const Spacer(),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w900,
+                color: Colors.white,
               ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 2),
+            Text(
+              subtitle,
+              style: TextStyle(
+                fontSize: 11,
+                color: Colors.white.withValues(alpha: 0.9),
+                fontWeight: FontWeight.w500,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildNewProductsCarousel(BuildContext context, ThemeProvider theme) {
+  Widget _buildPromotionCarousel(BuildContext context, ThemeProvider theme) {
     if (_newProducts.isEmpty) {
       return const SizedBox.shrink();
     }
@@ -489,53 +463,23 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Promosyon Başlığı
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
           child: Row(
             children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFFFF0080), Color(0xFFFF8C00)],
-                  ),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Icon(Icons.auto_awesome, color: Colors.white, size: 20),
+              Icon(
+                Icons.campaign_outlined,
+                color: theme.primaryColor,
+                size: 24,
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 8),
               Text(
-                'Yeni Ürünler',
+                'Kampanyalar',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.w900,
                   color: theme.textColor,
-                ),
-              ),
-              const Spacer(),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: theme.surfaceVariantColor,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.auto_awesome,
-                      size: 14,
-                      color: theme.textColor.withValues(alpha: 0.6),
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      'Otomatik',
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: theme.textColor.withValues(alpha: 0.6),
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
+                  fontSize: 22,
                 ),
               ),
             ],
@@ -575,195 +519,48 @@ class _HomeScreenState extends State<HomeScreen> {
     ThemeProvider theme,
     ShoeModel product,
   ) {
-    final gradientColors = [
-      [Color(0xFFFF6B6B), Color(0xFFFF8E53)],
-      [Color(0xFF4E65FF), Color(0xFF92EFFD)],
-      [Color(0xFFFF0080), Color(0xFFFF8C00)],
-      [Color(0xFF11998E), Color(0xFF38EF7D)],
-      [Color(0xFFFC466B), Color(0xFF3F5EFB)],
-      [Color(0xFFFFBE0B), Color(0xFFFFD60A)],
-    ];
-    
-    final colors = gradientColors[_newProducts.indexOf(product) % gradientColors.length];
-
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => ShoeDetailScreen(shoe: product),
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
           ),
-        );
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: colors,
-          ),
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: [
-            BoxShadow(
-              color: colors.first.withValues(alpha: 0.4),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
-            ),
-          ],
-        ),
-        child: Stack(
-          children: [
-            // Decorative elements
-            Positioned(
-              right: -30,
-              top: -30,
-              child: Container(
-                width: 120,
-                height: 120,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white.withValues(alpha: 0.05),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(24),
+        child: Image.asset(
+          product.imagePath,
+          fit: BoxFit.cover,
+          width: double.infinity,
+          errorBuilder: (context, error, stackTrace) {
+            return Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    theme.primaryColor.withValues(alpha: 0.3),
+                    theme.secondaryColor.withValues(alpha: 0.3),
+                  ],
                 ),
               ),
-            ),
-            Positioned(
-              left: -20,
-              bottom: -20,
-              child: Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white.withValues(alpha: 0.05),
+              child: Center(
+                child: Icon(
+                  Icons.image_outlined,
+                  color: theme.primaryColor,
+                  size: 60,
                 ),
               ),
-            ),
-            
-            // Product Image
-            Positioned(
-              right: 20,
-              top: 20,
-              bottom: 20,
-              width: 120,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.asset(
-                  product.imagePath,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      color: Colors.white.withValues(alpha: 0.2),
-                      child: const Icon(
-                        Icons.sports_soccer,
-                        color: Colors.white,
-                        size: 60,
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-            
-            // Content
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.9),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      'YENİ',
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w900,
-                        color: colors.first,
-                        letterSpacing: 1,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    width: 150,
-                    child: Text(
-                      product.name,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w900,
-                        color: Colors.white,
-                        letterSpacing: 0.5,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    product.brand,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.white.withValues(alpha: 0.95),
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.1),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'Ürüne Git',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                            color: colors.first,
-                          ),
-                        ),
-                        const SizedBox(width: 4),
-                        Icon(
-                          Icons.arrow_forward,
-                          size: 14,
-                          color: colors.first,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );
   }
 
-  void _showComingSoon(BuildContext context, ThemeProvider theme) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text('Bu özellik yakında eklenecek!'),
-        backgroundColor: theme.primaryColor,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-      ),
-    );
-  }
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../models/shoe_model.dart';
 import '../providers/theme_provider.dart';
 import '../providers/cart_provider.dart';
-import '../models/shoe_model.dart';
 import 'home_screen.dart';
 import 'cart_screen.dart';
 
@@ -19,20 +19,12 @@ class ShoeDetailScreen extends StatefulWidget {
 }
 
 class _ShoeDetailScreenState extends State<ShoeDetailScreen> {
-  String? selectedColor;
-  String? selectedSize;
   late PageController _pageController;
-  int _currentPage = 0;
+  int _currentImageIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    if (widget.shoe.colors.isNotEmpty) {
-      selectedColor = widget.shoe.colors.first;
-    }
-    if (widget.shoe.sizes.isNotEmpty) {
-      selectedSize = widget.shoe.sizes.first;
-    }
     _pageController = PageController(initialPage: 0);
   }
 
@@ -175,10 +167,6 @@ class _ShoeDetailScreenState extends State<ShoeDetailScreen> {
               delegate: SliverChildListDelegate([
                 _buildModernShoeDetails(themeProvider),
                 const SizedBox(height: 32),
-                _buildModernColorSection(themeProvider),
-                const SizedBox(height: 32),
-                _buildModernSizeSection(themeProvider),
-                const SizedBox(height: 32),
                 _buildModernActionButtons(themeProvider),
                 const SizedBox(height: 40),
               ]),
@@ -190,66 +178,56 @@ class _ShoeDetailScreenState extends State<ShoeDetailScreen> {
   }
 
   Widget _buildModernImageSection(ThemeProvider themeProvider) {
+    final productImages = widget.shoe.images;
+    
     return SizedBox(
       width: double.infinity,
       height: 400,
       child: Stack(
         children: [
-          // Swipeable images with PageView
+          // PageView for product images
           PageView.builder(
             controller: _pageController,
             physics: const ClampingScrollPhysics(),
-            pageSnapping: true,
-            itemCount: widget.shoe.colors.length,
+            itemCount: productImages.length,
             onPageChanged: (index) {
               setState(() {
-                _currentPage = index;
-                selectedColor = widget.shoe.colors[index];
+                _currentImageIndex = index;
               });
             },
             itemBuilder: (context, index) {
-              final color = widget.shoe.colors[index];
-              return Container(
-                width: double.infinity,
-                height: 400,
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(24),
-                    bottomRight: Radius.circular(24),
-                  ),
+              final imagePath = productImages[index];
+              return ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(24),
+                  bottomRight: Radius.circular(24),
                 ),
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(24),
-                    bottomRight: Radius.circular(24),
-                  ),
-                  child: Image.asset(
-                    widget.shoe.getImagePathForColor(color),
-                    width: double.infinity,
-                    height: 400,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        width: double.infinity,
-                        height: 400,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              themeProvider.primaryColor.withValues(alpha: 0.1),
-                              themeProvider.secondaryColor.withValues(alpha: 0.1),
-                            ],
-                          ),
+                child: Image.asset(
+                  imagePath,
+                  width: double.infinity,
+                  height: 400,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      width: double.infinity,
+                      height: 400,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            themeProvider.primaryColor.withValues(alpha: 0.1),
+                            themeProvider.secondaryColor.withValues(alpha: 0.1),
+                          ],
                         ),
-                        child: Icon(
-                          Icons.sports_soccer,
-                          size: 80,
-                          color: themeProvider.primaryColor,
-                        ),
-                      );
-                    },
-                  ),
+                      ),
+                      child: Icon(
+                        Icons.sports_soccer,
+                        size: 80,
+                        color: themeProvider.primaryColor,
+                      ),
+                    );
+                  },
                 ),
               );
             },
@@ -261,45 +239,60 @@ class _ShoeDetailScreenState extends State<ShoeDetailScreen> {
               width: double.infinity,
               height: 400,
               decoration: BoxDecoration(
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(24),
-                bottomRight: Radius.circular(24),
-              ),
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Colors.transparent,
-                  Colors.black.withValues(alpha: 0.3),
-                ],
-              ),
-            ),
-            ),
-          ),
-          
-          // Color indicator
-          Positioned(
-            bottom: 20,
-            left: 20,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: BoxDecoration(
-                color: Colors.black.withValues(alpha: 0.7),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(
-                selectedColor ?? 'Renk Seçin',
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(24),
+                  bottomRight: Radius.circular(24),
+                ),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.transparent,
+                    Colors.black.withValues(alpha: 0.3),
+                  ],
                 ),
               ),
             ),
           ),
           
-          // Navigation dots
-          if (widget.shoe.colors.length > 1)
+          // Product info overlay
+          Positioned(
+            bottom: 20,
+            left: 20,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: Colors.black.withValues(alpha: 0.7),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    widget.shoe.color,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Numara: ${widget.shoe.sizeRange}',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.white.withValues(alpha: 0.9),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          
+          // Navigation dots - Fotoğraf sayısı
+          if (productImages.length > 1)
             Positioned(
               bottom: 20,
               right: 20,
@@ -313,12 +306,21 @@ class _ShoeDetailScreenState extends State<ShoeDetailScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Icon(
-                      Icons.swipe,
+                      Icons.photo_library_outlined,
                       color: Colors.white,
                       size: 16,
                     ),
                     const SizedBox(width: 8),
-                    ...List.generate(widget.shoe.colors.length, (index) {
+                    Text(
+                      '${_currentImageIndex + 1}/${productImages.length}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    ...List.generate(productImages.length, (index) {
                       return GestureDetector(
                         onTap: () {
                           _pageController.animateToPage(
@@ -330,11 +332,11 @@ class _ShoeDetailScreenState extends State<ShoeDetailScreen> {
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 300),
                           margin: const EdgeInsets.symmetric(horizontal: 3),
-                          width: _currentPage == index ? 24 : 8,
+                          width: _currentImageIndex == index ? 24 : 8,
                           height: 8,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(4),
-                            color: _currentPage == index 
+                            color: _currentImageIndex == index 
                                 ? Colors.white 
                                 : Colors.white.withValues(alpha: 0.4),
                           ),
@@ -375,13 +377,46 @@ class _ShoeDetailScreenState extends State<ShoeDetailScreen> {
         ),
         const SizedBox(height: 16),
         
-        // Features
+        // Features - Toptan satış bilgileri
         Row(
           children: [
-            _buildFeatureChip(Icons.palette, '${widget.shoe.colors.length} Renk', themeProvider),
+            _buildFeatureChip(Icons.palette, widget.shoe.color, themeProvider),
             const SizedBox(width: 12),
-            _buildFeatureChip(Icons.straighten, '${widget.shoe.sizes.length} Numara', themeProvider),
+            _buildFeatureChip(Icons.straighten, widget.shoe.sizeRange, themeProvider),
           ],
+        ),
+        const SizedBox(height: 16),
+        
+        // Toptan satış bilgisi
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: themeProvider.primaryColor.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: themeProvider.primaryColor.withValues(alpha: 0.3),
+            ),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                Icons.inventory_2,
+                color: themeProvider.primaryColor,
+                size: 24,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  'Toptan Satış - Koli Bazında Sipariş',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: themeProvider.primaryColor,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -410,145 +445,6 @@ class _ShoeDetailScreenState extends State<ShoeDetailScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildModernColorSection(ThemeProvider themeProvider) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Renk Seçimi',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            color: themeProvider.textColor,
-            letterSpacing: -0.2,
-          ),
-        ),
-        const SizedBox(height: 16),
-        Wrap(
-          spacing: 12,
-          runSpacing: 12,
-          children: widget.shoe.colors.asMap().entries.map((entry) {
-            final index = entry.key;
-            final color = entry.value;
-            final isSelected = _currentPage == index;
-            return GestureDetector(
-              onTap: () {
-                setState(() {
-                  selectedColor = color;
-                  _currentPage = index;
-                });
-                _pageController.animateToPage(
-                  index,
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                );
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                decoration: BoxDecoration(
-                  gradient: isSelected 
-                    ? LinearGradient(
-                        colors: [themeProvider.primaryColor, themeProvider.secondaryColor],
-                      )
-                    : null,
-                  color: isSelected ? null : themeProvider.surfaceColor,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: isSelected ? Colors.transparent : themeProvider.textSecondaryColor.withValues(alpha: 0.3),
-                    width: 1,
-                  ),
-                  boxShadow: isSelected ? [
-                    BoxShadow(
-                      color: themeProvider.primaryColor.withValues(alpha: 0.3),
-                      blurRadius: 6,
-                      offset: const Offset(0, 2),
-                    ),
-                  ] : null,
-                ),
-                child: Text(
-                  color,
-                  style: TextStyle(
-                    color: isSelected ? Colors.white : themeProvider.textColor,
-                    fontWeight: isSelected ? FontWeight.w500 : FontWeight.w400,
-                    fontSize: 14,
-                    letterSpacing: 0.1,
-                  ),
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildModernSizeSection(ThemeProvider themeProvider) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Numara Seçimi',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            color: themeProvider.textColor,
-            letterSpacing: -0.2,
-          ),
-        ),
-        const SizedBox(height: 16),
-        Wrap(
-          spacing: 12,
-          runSpacing: 12,
-          children: widget.shoe.sizes.map((size) {
-            final isSelected = selectedSize == size;
-            return GestureDetector(
-              onTap: () {
-                setState(() {
-                  selectedSize = size;
-                });
-              },
-              child: Container(
-                width: 60,
-                height: 40,
-                decoration: BoxDecoration(
-                  gradient: isSelected 
-                    ? LinearGradient(
-                        colors: [themeProvider.primaryColor, themeProvider.secondaryColor],
-                      )
-                    : null,
-                  color: isSelected ? null : themeProvider.surfaceColor,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: isSelected ? Colors.transparent : themeProvider.textSecondaryColor.withValues(alpha: 0.3),
-                    width: 1,
-                  ),
-                  boxShadow: isSelected ? [
-                    BoxShadow(
-                      color: themeProvider.primaryColor.withValues(alpha: 0.3),
-                      blurRadius: 6,
-                      offset: const Offset(0, 2),
-                    ),
-                  ] : null,
-                ),
-                child: Center(
-                  child: Text(
-                    size,
-                    style: TextStyle(
-                      color: isSelected ? Colors.white : themeProvider.textColor,
-                      fontWeight: isSelected ? FontWeight.w500 : FontWeight.w400,
-                      fontSize: 14,
-                      letterSpacing: 0.1,
-                    ),
-                  ),
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-      ],
     );
   }
 
@@ -600,26 +496,12 @@ class _ShoeDetailScreenState extends State<ShoeDetailScreen> {
   }
 
   void _addToCart(BuildContext context) {
-    if (selectedColor == null || selectedSize == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Lütfen renk ve numara seçin!'),
-          backgroundColor: Colors.orange,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-      );
-      return;
-    }
-
     final cart = Provider.of<CartProvider>(context, listen: false);
-    cart.addToCart(widget.shoe, selectedColor!, selectedSize!);
+    cart.addToCart(widget.shoe);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: const Text('Ürün sepete eklendi!'),
+        content: Text('${widget.shoe.name} - 1 Koli sepete eklendi!'),
         backgroundColor: Colors.green,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(

@@ -328,7 +328,7 @@ class ModelsScreen extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16),
                     child: Image.asset(
-                      shoe.getImagePathForColor(shoe.colors.first),
+                      shoe.imagePath,
                       width: 80,
                       height: 80,
                       fit: BoxFit.cover,
@@ -389,20 +389,21 @@ class ModelsScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 12),
                       
-                      // Features
-                      Row(
+                      // Features - Toptan satış bilgileri
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
                         children: [
                           _buildModernFeatureChip(
                             context,
                             Icons.palette_outlined,
-                            '${shoe.colors.length} Renk',
+                            shoe.color,
                             themeProvider,
                           ),
-                          const SizedBox(width: 8),
                           _buildModernFeatureChip(
                             context,
                             Icons.straighten_outlined,
-                            '${shoe.sizes.length} Numara',
+                            shoe.sizeRange,
                             themeProvider,
                           ),
                         ],
