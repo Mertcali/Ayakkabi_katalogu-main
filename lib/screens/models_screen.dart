@@ -339,28 +339,18 @@ class ModelsScreen extends StatelessWidget {
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                               colors: [
-                                themeProvider.primaryColor.withValues(alpha: 0.1),
-                                themeProvider.secondaryColor.withValues(alpha: 0.1),
+                                themeProvider.primaryColor.withValues(alpha: 0.15),
+                                themeProvider.secondaryColor.withValues(alpha: 0.15),
                               ],
                             ),
                             borderRadius: BorderRadius.circular(16),
                           ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.sports_soccer_outlined,
-                                size: 24,
-                                color: themeProvider.primaryColor,
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'Hata',
-                                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                  color: themeProvider.primaryColor,
-                                ),
-                              ),
-                            ],
+                          child: Center(
+                            child: Icon(
+                              Icons.shopping_bag_outlined,
+                              size: 36,
+                              color: themeProvider.primaryColor.withValues(alpha: 0.6),
+                            ),
                           ),
                         );
                       },
@@ -466,22 +456,11 @@ class ModelsScreen extends StatelessWidget {
   }
 
   String _getScreenTitle() {
-    final genderTitle = _getGenderTitle(gender);
     final categoryTitle = _getCategoryTitle(category);
-    return '$genderTitle - $categoryTitle - $sizeGroup';
-  }
-
-  String _getGenderTitle(String gender) {
-    switch (gender) {
-      case 'kadin':
-        return 'Kadın';
-      case 'erkek':
-        return 'Erkek';
-      case 'cocuk':
-        return 'Çocuk';
-      default:
-        return '';
+    if (sizeGroup != null) {
+      return '$categoryTitle - $sizeGroup';
     }
+    return categoryTitle;
   }
 
   String _getCategoryTitle(String category) {

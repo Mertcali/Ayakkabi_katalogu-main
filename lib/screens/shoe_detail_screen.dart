@@ -216,15 +216,42 @@ class _ShoeDetailScreenState extends State<ShoeDetailScreen> {
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            themeProvider.primaryColor.withValues(alpha: 0.1),
-                            themeProvider.secondaryColor.withValues(alpha: 0.1),
+                            themeProvider.primaryColor.withValues(alpha: 0.15),
+                            themeProvider.secondaryColor.withValues(alpha: 0.15),
                           ],
                         ),
+                        borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(24),
+                          bottomRight: Radius.circular(24),
+                        ),
                       ),
-                      child: Icon(
-                        Icons.sports_soccer,
-                        size: 80,
-                        color: themeProvider.primaryColor,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.shopping_bag_outlined,
+                            size: 100,
+                            color: themeProvider.primaryColor.withValues(alpha: 0.5),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            widget.shoe.name,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: themeProvider.primaryColor.withValues(alpha: 0.7),
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Görsel Yükleniyor...',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: themeProvider.textSecondaryColor,
+                            ),
+                          ),
+                        ],
                       ),
                     );
                   },

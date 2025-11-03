@@ -401,6 +401,14 @@ class GenderSelectionScreen extends StatelessWidget {
         return 'Kadın';
       case 'erkek':
         return 'Erkek';
+      case 'garson':
+        return 'Garson';
+      case 'filet':
+        return 'Filet';
+      case 'patik':
+        return 'Patik';
+      case 'bebe':
+        return 'Bebe';
       case 'cocuk':
         return 'Çocuk';
       default:
@@ -414,6 +422,14 @@ class GenderSelectionScreen extends StatelessWidget {
         return Icons.female;
       case 'erkek':
         return Icons.male;
+      case 'garson':
+        return Icons.work_outline;
+      case 'filet':
+        return Icons.child_friendly;
+      case 'patik':
+        return Icons.child_care;
+      case 'bebe':
+        return Icons.baby_changing_station;
       case 'cocuk':
         return Icons.child_care;
       default:
